@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- 将原来的代码改为用Vue组件和路由的形式 -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="./node_modules/todomvc-app-css/index.css">
+    <script src="./node_modules/vue/dist/vue.js"></script>
+    <script src="./node_modules/underscore/underscore-min.js"></script>
+    <script src="./js/store.js"></script>
+</head>
+
+<body>
+    <section class="todoapp">
+        <header class="header">
+            <h1>todos</h1>
+            <input class="new-todo" placeholder="你接下来需要完成什么?" autofocus="" v-model="newTodo" @keyup.enter.trim="addTodo" />
+        </header>
+        <section class="main" v-show="showList">
+            <input class="toggle-all" id="toggle-all" type="checkbox" v-model="allDone" />
+            <label for="toggle-all">Mark all as complete</label>
+            <ul class="todo-list">
+                <li :class="{completed: todo.checked, editing: index === editingIndex}" v-for="(todo,index) in filteredTodoList" :key="'todo-' + index">
+                    <div class="view">
+                        <input class="toggle" type="checkbox" v-model="todo.checked">
+                        <label @dblclick="editTodo(index)">{{ todo.text }}</label>
+                        <button class="destroy" @click="deleteTodo(todo)"></button>
+                    </div>
+                    <input class="edit" type="text" v-model="todo.text" v-focus="index === editingIndex" @blur="saveTodo(todo)" @keyup.enter="saveTodo(todo)"
+                    />
+                </li>
+            </ul>
+        </section>
+        <footer class="footer" v-show="showList">
+            <span class="todo-count">
+                <strong>{{ activeCount }}</strong> item left</span>
+            <ul class="filters">
+                <li>
+                    <a :class="{selected: visibility === 'all'}" href="#/" @click="visibility='all'">所有</a>
+                </li>
+                <li>
+                    <a :class="{selected: visibility === 'active'}" href="#/active" @click="visibility = 'active'">未完成</a>
+                </li>
+                <li>
+                    <a :class="{selected: visibility === 'completed'}" href="#/completed" @click="visibility = 'completed'">已完成</a>
+                </li>
+            </ul>
+            <button class="clear-completed" @click="clearCompleted" v-show="completedCount > 0">清空已完成</button>
+        </footer>
+    </section>
+</body>
+<script src="./js/todoList02.js"></script>
+
+</html>

@@ -41,9 +41,6 @@
             newTodo: '', // 用于临时存储任务的名称
             todoList: todoStorage.fetch()
         },
-        // created() {
-        //     localStorage.clear();
-        // },
         // 方法
         methods: {
             addTodo() {
