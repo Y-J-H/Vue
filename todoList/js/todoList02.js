@@ -101,6 +101,18 @@
             deleteTodo(todo) {
                 this.$emit('delete-todo-root',todo);
             },
+             // 编辑任务
+             editTodo(index) {
+                // 设置一下当前正在编辑的索引
+                this.editingIndex = index;
+            },
+            // 保存任务，因为是动态绑定的，不需要再保存，只需要把input框隐藏即可
+            saveTodo(todo) {
+                this.editingIndex = -1
+                if (todo.text.trim().length < 1) {
+                    this.deleteTodo(todo);
+                }
+            },
         }
         
     }
@@ -127,18 +139,6 @@
             },
             deleteTodoRoot(todo){
                 this.todoList = _.without(this.todoList, todo) // _.without是underscore中的方法
-            },
-            // 编辑任务
-            editTodo(index) {
-                // 设置一下当前正在编辑的索引
-                this.editingIndex = index;
-            },
-            // 保存任务，因为是动态绑定的，不需要再保存，只需要把input框隐藏即可
-            saveTodo(todo) {
-                this.editingIndex = -1
-                if (todo.text.trim().length < 1) {
-                    this.deleteTodo(todo);
-                }
             },
             // 清空已完成的任务列表
             clearCompleted() {
