@@ -30,18 +30,18 @@
         }
     })
 
-    let todoapp = new Vue({
-        // 挂载元素
-        el: '.todoapp',
-        // 数据,存放所有你发布的任务的数据
-        data: {
-            visibility: visibility,
-            // 正在编辑的任务索引
-            editingIndex: -1,
-            newTodo: '', // 用于临时存储任务的名称
-            todoList: todoStorage.fetch()
+    // 创建头部组件
+    let todoListHead = {
+        data() {
+            return {
+                newTodo: ''    // 用于临时存储任务的名称
+            }
         },
-        // 方法
+        template:  ` <header class="header">
+                        <h1>todos</h1>
+                        <input class="new-todo" placeholder="你接下来需要完成什么?" autofocus=""
+                         v-model="newTodo" @keyup.enter.trim="addTodo" />
+                      </header>`,
         methods: {
             addTodo() {
                 // 去除前后的空格
@@ -50,13 +50,34 @@
                 if (this.newTodo.length < 1) {
                     return;
                 }
-                // 添加任务到数组中,默认是未完成
-                this.todoList.unshift({
-                    text: this.newTodo,
-                    checked: false
-                });
+                this.$emit('add-todo-root', this.newTodo);
                 // 清空新任务的内容
                 this.newTodo = ''
+            },
+        }
+    }
+
+
+    let todoapp = new Vue({
+        // 挂载元素
+        el: '.todoapp',
+        // 数据,存放所有你发布的任务的数据
+        data: {
+            visibility: visibility,
+            // 正在编辑的任务索引
+            editingIndex: -1,
+            // newTodo: '', // 用于临时存储任务的名称
+            todoList: todoStorage.fetch()
+        },
+        // 方法
+        methods: {
+            addTodoRoot(text){
+                 // 添加任务到数组中,默认是未完成
+                 this.todoList.unshift({
+                    text,
+                    checked: false
+                });
+                console.log(111);
             },
             deleteTodo(todo) {
                 this.todoList = _.without(this.todoList, todo) // _.without是underscore中的方法
@@ -114,6 +135,11 @@
                 deep: true,
                 handler: todoStorage.save
             }
+        },
+
+        // 组件
+        components: {
+            todoListHead
         }
     })
 
