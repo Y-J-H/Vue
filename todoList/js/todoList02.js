@@ -57,6 +57,54 @@
         }
     }
 
+    // 创建主体内容部分的组件
+    let todoListMain = {
+        data() {
+            return {
+                // 正在编辑的任务索引
+                editingIndex: -1,
+            }
+        },
+        template: `<section class="main" v-show="showList">
+                        <input class="toggle-all" id="toggle-all" type="checkbox" v-model="allDone" />
+                        <label for="toggle-all">Mark all as complete</label>
+                        <ul class="todo-list">
+                            <li :class="{completed: todo.checked, editing: index === editingIndex}" v-for="(todo,index) in filteredTodoList" :key="'todo-' + index">
+                                <div class="view">
+                                    <input class="toggle" type="checkbox" v-model="todo.checked">
+                                    <label @dblclick="editTodo(index)">{{ todo.text }}</label>
+                                    <button class="destroy" @click="deleteTodo(todo)"></button>
+                                </div>
+                                <input class="edit" type="text" v-model="todo.text" v-focus="index === editingIndex" @blur="saveTodo(todo)" @keyup.enter="saveTodo(todo)"
+                                />
+                            </li>
+                        </ul>
+                    </section>`,
+        props: ['filteredTodoList'],
+        computed: {
+            showList() {
+                return this.filteredTodoList.length > 0;
+            },
+            allDone: {
+                get() {
+                    // 未完成的数量为0表示全部完成,全部完成返回true
+                    return this.activeCount === 0;
+                },
+                set(value) {
+                    this.filteredTodoList.forEach(todo => {
+                        todo.checked = value
+                    });
+                }
+            }
+        },
+        methods: {
+            deleteTodo(todo) {
+                this.$emit('delete-todo-root',todo);
+            },
+        }
+        
+    }
+
 
     let todoapp = new Vue({
         // 挂载元素
@@ -64,8 +112,6 @@
         // 数据,存放所有你发布的任务的数据
         data: {
             visibility: visibility,
-            // 正在编辑的任务索引
-            editingIndex: -1,
             // newTodo: '', // 用于临时存储任务的名称
             todoList: todoStorage.fetch()
         },
@@ -79,7 +125,7 @@
                 });
                 console.log(111);
             },
-            deleteTodo(todo) {
+            deleteTodoRoot(todo){
                 this.todoList = _.without(this.todoList, todo) // _.without是underscore中的方法
             },
             // 编辑任务
@@ -91,7 +137,7 @@
             saveTodo(todo) {
                 this.editingIndex = -1
                 if (todo.text.trim().length < 1) {
-                    this.deleteTodo(todo)
+                    this.deleteTodo(todo);
                 }
             },
             // 清空已完成的任务列表
@@ -101,23 +147,9 @@
         },
         // 计算属性
         computed: {
-            showList() {
-                return this.todoList.length > 0;
-            },
             // 未完成的任务数量
             activeCount() {
                 return filters.active(this.todoList).length;
-            },
-            allDone: {
-                get() {
-                    // 未完成的数量为0表示全部完成,全部完成返回true
-                    return this.activeCount === 0;
-                },
-                set(value) {
-                    this.todoList.forEach(todo => {
-                        todo.checked = value
-                    });
-                }
             },
             // 过滤任务列表
             filteredTodoList: function () {
@@ -139,7 +171,8 @@
 
         // 组件
         components: {
-            todoListHead
+            todoListHead,
+            todoListMain
         }
     })
 
