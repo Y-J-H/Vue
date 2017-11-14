@@ -57,39 +57,32 @@
         }
     }
 
-    // 创建主体内容部分的组件
-    let todoListMain = {
+    // 创建一个用于显示任务的列表组件
+    let showTodoList = {
         data() {
             return {
                 // 正在编辑的任务索引
                 editingIndex: -1,
             }
         },
-        template: `<section class="main" v-show="showList">
-                        <input class="toggle-all" id="toggle-all" type="checkbox" v-model="allDone" />
-                        <label for="toggle-all">Mark all as complete</label>
-                        <ul class="todo-list">
-                            <li :class="{completed: todo.checked, editing: index === editingIndex}" v-for="(todo,index) in filteredTodoList" :key="'todo-' + index">
-                                <div class="view">
-                                    <input class="toggle" type="checkbox" v-model="todo.checked">
-                                    <label @dblclick="editTodo(index)">{{ todo.text }}</label>
-                                    <button class="destroy" @click="deleteTodo(todo)"></button>
-                                </div>
-                                <input class="edit" type="text" v-model="todo.text" v-focus="index === editingIndex" @blur="saveTodo(todo)" @keyup.enter="saveTodo(todo)"
-                                />
-                            </li>
-                        </ul>
-                    </section>`,
-        props: ['filteredTodoList', 'showList', 'allDone'],
-        computed: {
-            
-        },
+        template: `<ul class="todo-list">
+                        <li :class="{completed: todo.checked, editing: index === editingIndex}" v-for="(todo,index) in filteredTodoList" :key="'todo-' + index">
+                            <div class="view">
+                                <input class="toggle" type="checkbox" v-model="todo.checked">
+                                <label @dblclick="editTodo(index)">{{ todo.text }}</label>
+                                <button class="destroy" @click="deleteTodo(todo)"></button>
+                            </div>
+                            <input class="edit" type="text" v-model="todo.text" v-focus="index === editingIndex" @blur="saveTodo(todo)" @keyup.enter="saveTodo(todo)"
+                            />
+                        </li>
+                    </ul>`,
+        props: [ 'filteredTodoList'],
         methods: {
             deleteTodo(todo) {
                 this.$emit('delete-todo-root',todo);
             },
              // 编辑任务
-             editTodo(index) {
+            editTodo(index) {
                 // 设置一下当前正在编辑的索引
                 this.editingIndex = index;
             },
@@ -100,8 +93,7 @@
                     this.deleteTodo(todo);
                 }
             },
-        }
-        
+        }    
     }
 
     // 创建底部的组件
@@ -151,7 +143,6 @@
                     text,
                     checked: false
                 });
-                console.log(111);
             },
             deleteTodoRoot(todo){
                 this.todoList = _.without(this.todoList, todo); // _.without是underscore中的方法
@@ -201,7 +192,7 @@
         // 组件
         components: {
             todoListHead,
-            todoListMain,
+            showTodoList,
             todoListFoot
         }
     })

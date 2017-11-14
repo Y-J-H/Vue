@@ -15,12 +15,11 @@
 <body>
     <section class="todoapp">
         <todo-list-head @add-todo-root="addTodoRoot"></todo-list-head>
-        <todo-list-main 
-            :filtered-todo-list= "filteredTodoList" 
-            :show-list="showList"
-            :all-done= "allDone"
-            @delete-todo-root= "deleteTodoRoot"
-        ></todo-list-main>
+        <section class="main" v-show="showList">
+            <input class="toggle-all" id="toggle-all" type="checkbox" v-model="allDone" />
+            <label for="toggle-all">Mark all as complete</label>
+            <show-todo-list :filtered-todo-list="filteredTodoList" @delete-todo-root= "deleteTodoRoot"></show-todo-list>
+        </section>
         <todo-list-foot
             :show-list= "showList"
             :active-count= "activeCount"
