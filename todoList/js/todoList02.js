@@ -104,6 +104,35 @@
         
     }
 
+    // 创建底部的组件
+    let todoListFoot = {
+        template: `<footer class="footer" v-show="showList">
+                        <span class="todo-count">
+                            <strong>{{ activeCount }}</strong> item left</span>
+                        <ul class="filters">
+                            <li>
+                                <a :class="{selected: visibility === 'all'}" href="#/" @click="visibility='all'">所有</a>
+                            </li>
+                            <li>
+                                <a :class="{selected: visibility === 'active'}" href="#/active" @click="visibility = 'active'">未完成</a>
+                            </li>
+                            <li>
+                                <a :class="{selected: visibility === 'completed'}" href="#/completed" @click="visibility = 'completed'">已完成</a>
+                            </li>
+                        </ul>
+                        <button class="clear-completed" @click="clearCompleted" v-show="completedCount > 0">清空已完成</button>
+                    </footer>`,
+        props: ['showList', 'activeCount', 'visibility', 'completedCount'],
+        methods: {
+
+            // 清空已完成的任务列表
+            clearCompleted() {
+                this.$emit('clear-completed-root');
+            }
+
+        }
+    }
+
 
     let todoapp = new Vue({
         // 挂载元素
@@ -125,11 +154,10 @@
                 console.log(111);
             },
             deleteTodoRoot(todo){
-                this.todoList = _.without(this.todoList, todo) // _.without是underscore中的方法
+                this.todoList = _.without(this.todoList, todo); // _.without是underscore中的方法
             },
-            // 清空已完成的任务列表
-            clearCompleted() {
-                this.todoList = filters.active(this.todoList)
+            clearCompletedRoot() {
+                this.todoList = filters.active(this.todoList);
             }
         },
         // 计算属性
@@ -173,7 +201,8 @@
         // 组件
         components: {
             todoListHead,
-            todoListMain
+            todoListMain,
+            todoListFoot
         }
     })
 

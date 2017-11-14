@@ -21,22 +21,13 @@
             :all-done= "allDone"
             @delete-todo-root= "deleteTodoRoot"
         ></todo-list-main>
-        <footer class="footer" v-show="showList">
-            <span class="todo-count">
-                <strong>{{ activeCount }}</strong> item left</span>
-            <ul class="filters">
-                <li>
-                    <a :class="{selected: visibility === 'all'}" href="#/" @click="visibility='all'">所有</a>
-                </li>
-                <li>
-                    <a :class="{selected: visibility === 'active'}" href="#/active" @click="visibility = 'active'">未完成</a>
-                </li>
-                <li>
-                    <a :class="{selected: visibility === 'completed'}" href="#/completed" @click="visibility = 'completed'">已完成</a>
-                </li>
-            </ul>
-            <button class="clear-completed" @click="clearCompleted" v-show="completedCount > 0">清空已完成</button>
-        </footer>
+        <todo-list-foot
+            :show-list= "showList"
+            :active-count= "activeCount"
+            :visibility= "visibility"
+            :completed-count= "completedCount"
+            @clear-completed-root= "clearCompletedRoot"
+        ></todo-list-foot>
     </section>
 </body>
 <script src="./js/todoList02.js"></script>
