@@ -80,22 +80,9 @@
                             </li>
                         </ul>
                     </section>`,
-        props: ['filteredTodoList'],
+        props: ['filteredTodoList', 'showList', 'allDone'],
         computed: {
-            showList() {
-                return this.filteredTodoList.length > 0;
-            },
-            allDone: {
-                get() {
-                    // 未完成的数量为0表示全部完成,全部完成返回true
-                    return this.activeCount === 0;
-                },
-                set(value) {
-                    this.filteredTodoList.forEach(todo => {
-                        todo.checked = value
-                    });
-                }
-            }
+            
         },
         methods: {
             deleteTodo(todo) {
@@ -147,6 +134,20 @@
         },
         // 计算属性
         computed: {
+            showList() {
+                return this.filteredTodoList.length > 0;
+            },
+            allDone: {
+                get() {
+                    // 未完成的数量为0表示全部完成,全部完成返回true
+                    return this.activeCount === 0;
+                },
+                set(value) {
+                    this.filteredTodoList.forEach(todo => {
+                        todo.checked = value
+                    });
+                }
+            },
             // 未完成的任务数量
             activeCount() {
                 return filters.active(this.todoList).length;

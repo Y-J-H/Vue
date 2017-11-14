@@ -15,8 +15,13 @@
 <body>
     <section class="todoapp">
         <todo-list-head @add-todo-root="addTodoRoot"></todo-list-head>
-        <todo-list-main :filtered-todo-list= "filteredTodoList" @delete-todo-root= "deleteTodoRoot"></todo-list-main>
-        <!-- <footer class="footer" v-show="showList">
+        <todo-list-main 
+            :filtered-todo-list= "filteredTodoList" 
+            :show-list="showList"
+            :all-done= "allDone"
+            @delete-todo-root= "deleteTodoRoot"
+        ></todo-list-main>
+        <footer class="footer" v-show="showList">
             <span class="todo-count">
                 <strong>{{ activeCount }}</strong> item left</span>
             <ul class="filters">
@@ -31,7 +36,7 @@
                 </li>
             </ul>
             <button class="clear-completed" @click="clearCompleted" v-show="completedCount > 0">清空已完成</button>
-        </footer> -->
+        </footer>
     </section>
 </body>
 <script src="./js/todoList02.js"></script>
